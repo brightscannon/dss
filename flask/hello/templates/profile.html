@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Flask Test</title>
+  </head>
+  <body>
+    {% if name %}
+    <p> Hello {{name}}</p>
+    {% else %}
+    <p>no name</p>
+    {% endif %}
+    <input class="input-age" type="text">
+    <input class="input-name" type="text">
+    <button class = "getDatas" type="button" name="button">
+      Click
+    </button>
+
+    <p>
+      <spen class="name">-</spen>
+      <spen class="age">-</spen>
+    </p>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $(".getDatas").click(function(){
+          var age = $('.input-age').val();
+          var name = $('.input-name').val();
+          $.getJSON("/people/"+name+"/"+age,function(data){
+            console.log(data);
+
+            $(".name").text(data.name);
+            $(".age").text(data.age);
+          })
+          alert(1234);
+        })
+      })
+
+    </script>
+    </script>
+  </body>
+</html>
