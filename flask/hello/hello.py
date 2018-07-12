@@ -2,6 +2,11 @@ from flask import *
 
 app = Flask(__name__)
 
+@app.route("/")
+def index():
+    return "hello world! This is Bright's page."
+
+
 @app.route("/flask")
 def hello():
     return "hello flask"
