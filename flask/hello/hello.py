@@ -1,10 +1,21 @@
 from flask import *
+from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
 
+
+Bootstrap(app) #요렇게 해줘야 적용된다.
+# @app.route('/bootstrap') #접속할 URL
+# def bootstrap():
+# 	return render_template('bootstrap.html') #예제 템플릿
+
 @app.route("/")
 def index():
-    return "hello world! This is Bright's page."
+    # return "hello world! This is Bright's page."
+    return render_template("index.html")
+
+if __name__ == '__main__':
+	app.run(host='0.0.0.0', debug=True)
 
 
 @app.route("/flask")
