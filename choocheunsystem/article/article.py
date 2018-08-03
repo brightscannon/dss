@@ -24,10 +24,9 @@ def predic():
 
     model = models["classification"]
 
-    sentence = request.values.get("sentence")
-
-    
-
+    sentence = request.values.get("sentence") #쿼리형태로 가져오는게 가능함
+    result["sentence"] = sentence
+    result["result"] = list(np.round_(model.predict_proba([sentence])[0]*100,2))
 
     return jsonify(result)
 
