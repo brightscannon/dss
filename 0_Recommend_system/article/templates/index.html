@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>데사스8-B</title>
+    <link rel="shortcut icon" href="https://www.fastcampus.co.kr/wp-content/uploads/2016/02/untitled_1_01_wfp_icon.ico"  />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
+
+    <style media="screen">
+      #container{
+        margin: 0 auto;
+      }
+    </style>
+
+  </head>
+  <body>
+    <div class="container pt-5">
+      <!-- 입력창 -->
+      <div class="row">
+        <input class="form-control col-9 sentence" type="text" placeholder="데이터를 입력하시오">
+        <button type="button" class="btn btn-success col-3 prediction">Prediction</button>
+      </div>
+
+      <!-- 결과창 -->
+      <div class="row">
+        <div class="col-12 alert alert-success mt-2" role="alert">
+          A simple success alert—check it out!
+        </div>
+      </div>
+
+      <!-- 차트뷰 -->
+      <div class="row">
+        <div id="container"></div>
+
+      </div>
+
+
+    </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('.prediction').click(function(){
+          var sentence = $('.sentence').val();
+          console.log(sentence);
+          var url = "/predic?sentence="+sentence;
+          console.log(url);
+          $.getJSON(url, function(data){
+            console.log(data);
+
+            $('.alert').empty();
+            for(var i=0; i<data.category.length; i++){
+              var tag = "<p>"+data.category[i]+" : "+data.result[i]+"%</p>"
+              $('.alert').append(tag);
+            }
+
+            var series = [];
+            for(var i=0; i<data.category.length; i++){
+              series.push({
+                name:data.category[i],
+                y:data.result[i]
+              })
+            }
+            draw_chart(series);
+          })
+        })
+      })
+
+
+      function draw_chart(series){
+        Highcharts.setOptions({
+          colors: Highcharts.map(Highcharts.getOptions().colors, function (color) {
+            return {
+              radialGradient: {
+                cx: 0.5,
+                cy: 0.3,
+                r: 0.7
+              },
+              stops: [
+                [0, color],
+                [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+              ]
+            };
+          })
+        });
+
+        Highcharts.chart('container', {
+          chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+          },
+          title: {
+            text: '데이터 사이언스 스쿨 8기, 2018'
+          },
+          tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                  color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+              }
+            }
+          },
+          series: [{
+            name: 'Brands',
+            colorByPoint: true,
+            data: series
+          }]
+        });
+      }
+    </script>
+  </body>
+</html>
